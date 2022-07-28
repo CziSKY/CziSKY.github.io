@@ -1,1 +1,1 @@
-# czisky.github.io
+# CziSKY.github.io
