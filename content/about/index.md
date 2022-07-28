@@ -9,7 +9,7 @@ template = "post-page.html"
 
 早期因爱好接触到了 [Minecraft](https://en.wikipedia.org/wiki/Minecraft) 这款游戏，并由此借机接触到了编程，较为擅长 Kotlin / Java 语言。
 
-目前对 Functional Programming (函数式编程) 感兴趣，正在用业余时间学习 Haskell。
+目前对函数式编程 (Functional Programming) 感兴趣，正在用业余时间学习 Haskell。
 
 > 你可以通过以下几种方式联系到我：
 >
