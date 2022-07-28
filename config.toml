@@ -21,3 +21,9 @@ highlight_code = false
 [extra]
 # Put all your custom variables here
 emily_author = "闲蛋 (kirraObj)"
+
+# Path to the header icon / favicon image.
+# Please save image to static/images
+emily_icon = "/images/logo.png"
+
+emily_favicon = "/images/favicon.png"
