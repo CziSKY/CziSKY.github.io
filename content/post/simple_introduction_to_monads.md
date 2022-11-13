@@ -375,7 +375,7 @@ static ResultOrError enthuse_2(String sentence) {
 
 Monads 来拯救我们了！ 它为这种问题提供了一个通用的解决方案，而且它们还有其他的好处。正如我们在后面所看到的，Monad 使所谓的 Monadic 函数能够被复合。这些函数不能被直接复合，因为它们的类型是不兼容的。
 
-有些人说：“如果 Monads 不存在，你可以发明它们”（Brian Beckman 在他的精彩演讲 [Don't Fear the Monad](https://www.youtube.com/watch?v=ZhuHCtR3xq8) 中提到），这是真的！
+有些人说：“如果 Monads 不存在，你可以发明它们”（Brian Beckman 在他的精彩演讲 [Don't Fear the Monad](https://www.youtube.com/watch?v=ZhuHCtR3xq8) 中提到），这是正确的！
 
 因此，我们先抛下 Monad，让我们自己一步步地思考来找到解决方案。
 
@@ -577,7 +577,7 @@ public class ResultOrErrorMona<R> {
 }
 ```
 
-`ResultOrErrorMona`，注意看这个类名。我并没有拼错它，因为这个类目前还不是一个 Monad，这么命名它仅是为了好玩。
+`ResultOrErrorMona`，注意看这个类名。我并没有拼错它，因为这个类目前还不是一个 Monad，这么命名它仅是为了有趣。
 
 ### 第三步改进
 
