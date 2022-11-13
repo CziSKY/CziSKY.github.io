@@ -210,7 +210,7 @@ let h = f >> g
 static String enthuse (String sentence) = trim >> toUpperCase >> appendExclam;
 ```
 
-## 错误，但不是异常。
+## 错误，但不是异常
 
 为了本教程的目的，假设我们的函数可能会因以下几点导致执行失败：
 
