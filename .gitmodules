@@ -1,0 +1,4 @@
+[submodule "themes/emily_zola_theme"]
+	path = themes/emily_zola_theme
+	url = https://github.com/CziSKY/emily_zola_theme.git
+	branch = master
