@@ -276,7 +276,7 @@ public class ResultOrError {
 正如我们所看到的：
 
 - 该类有两个不可变的字段，用来保存结果或错误。
-- 有两个构造函数：
+- 有两个构造函数 (*Constructor*)：
   - 第一个构造函数用于成功的情况（例：`return new ResultOrError("hello");`）。
   - 第二个构造函数用于失败的情况（例：`return new ResultOrError(new Error("Something went wrong"));`）。
 - `isResult` 和 `isError` 是工具函数。
@@ -325,7 +325,7 @@ static String enthuse(String sentence) {
 
 ······然而并没有起任何作用。
 
-不幸的，现在的函数复合无效了，因为现在的函数返回一个 `ResultOrError` 对象。但需要一个字符串作为输入，输入和输出类型不再匹配了，这些函数不能再被链起来了。
+不幸的，现在的函数复合无效了，因为现在的函数返回一个 `ResultOrError` 对象。但需要一个字符串作为输入，输入和输出类型不再匹配了，这些函数不能再被链接起来了。
 
 在之前的代码中，当函数返回字符串时，一个函数的输出可以输入到下一个函数中。
 
@@ -377,7 +377,7 @@ Monads 来拯救我们了！ 它为这种问题提供了一个通用的解决方
 
 有些人说：“如果 Monads 不存在，你可以发明它们”（Brian Beckman 在他的精彩演讲 [Don't Fear the Monad](https://www.youtube.com/watch?v=ZhuHCtR3xq8) 中提到），这是真的！
 
-因此，先让我们抛下 Monad 吧！让我们自己一步步地思考和尝试来找到解决方案。
+因此，我们先抛下 Monad，让我们自己一步步地思考来找到解决方案。
 
 ## “绑定” 函数 (bind)
 
@@ -385,7 +385,7 @@ Monads 来拯救我们了！ 它为这种问题提供了一个通用的解决方
 
 我们把这个函数称为 `bind`，因为它的作用是绑定两个不能直接复合的函数。
 
-接下来我们必须决定 `bind` 的输入是什么，以及它应该返回什么。让我们来考虑链式函数 `trim` 和 `toUpperCase` 的情况。
+接下来我们必须决定 `bind` 的输入是什么，以及它应该返回什么。让我们来考虑链接函数 `trim` 和 `toUpperCase` 的情况。
 
 ![](../trim_toUppercase_functions_chains.png)
 
@@ -450,7 +450,7 @@ static ResultOrError enthuse_2(String sentence) {
 
 > 如果你从未见过这种风格的代码，那么请你慢慢消化并充分理解在这个函数内发生了什么。理解 `bind` 是理解 Monads 的关键！
 >
-> `bind` 是 Haskell 中的函数之一，还有其他函数。例如：`flatMap`、`chain` 和 `andThen`。
+> `bind` 是在 Haskell 中的函数名，还有一些替代名称。例如：`flatMap`、`chain` 和 `andThen`。
 
 它是否能够正常工作？让我们来测试一下。这里有一个包含 `bind` 的类，`enthuse` 的两种编码风格版本（命令式与函数式）。以及一些简单的测试，涵盖了成功和所有失败的情况：
 
@@ -507,6 +507,384 @@ Error: String must not exceed 20 characters.
 Error: String must not exceed 20 characters. 
 ```
 
-上面定义的 `bind` 函数为我们的具体问题服务。为了让它成为为 Monad 的一部分，我们必须让它变得更加通用。我们将很快做到这一点。
+上面定义的 `bind` 函数仅为我们的需求服务。为了让它成为 Monad 的一部分，我们必须让它变得更加通用。我们将很快做到这一点。
 
 > 如上所示，使用 `bind` 是解决函数复合问题的常见方法。但这并不是唯一的方法。另一种方法叫做 Kleisli 复合 (*Kleisli composition*)，这不在本文的讨论范围内。
+
+## 终于，一个 Monad！
+
+现在我们有了 `bind`，剩下的步骤就很容易了。我们只需要做一些改进，以便有一个可以适用于其他情况的解决方案。
+
+在这一章内我们的目标很明确，掌握这一模式，改进 `ResultOrError`。
+
+### 第一步改进
+
+在之前的章节中，我们将 `bind` 声明成一个独立的函数，满足了我们的特殊需求。第一步改进是将 `bind` 函数移到 `ResultOrError` 类中，函数 `bind` 必须是 Monad 类的一部分。原因是 `bind` 的实现基于使用 `bind` 的 Monad。虽然 `bind` 的类型签名总是相同的，但对于不同的 Monad 我们使用不同的实现 (*Implementions*) 。
+
+### 第二步改进
+
+在我们的范例代码中，复合的函数都需要一个字符串作为输入，并返回一个字符串或一个错误对象。如果我们想要复合的函数接收一个整数 (*Integer*)，并返回一个整数或一个错误对象呢？我们可以改进 `ResultOrError` 使其适用于任何类型的结果吗？当然可以。我们只需要给 `ResultOrError` 加上一个类型参数 (*Type Parameter*)。
+
+这是将 `bind` 移入类并加上类型参数后的新版本：
+
+```java
+public class ResultOrErrorMona<R> {
+
+    private final R result;
+    private final SimpleError error;
+
+    public ResultOrErrorMona(R result) {
+        this.result = result;
+        this.error = null;
+    }
+
+    public ResultOrErrorMona(SimpleError error) {
+        this.result = null;
+        this.error = error;
+    }
+
+    public R getResult() {
+        return result;
+    }
+
+    public SimpleError getError() {
+        return error;
+    }
+
+    public boolean isResult() {
+        return error == null;
+    }
+
+    public boolean isError() {
+        return error != null;
+    }
+
+    static <R> ResultOrErrorMona<R> bind(ResultOrErrorMona<R> value, Function<R, ResultOrErrorMona<R>> function) {
+        if (value.isResult()) {
+            return function.apply(value.getResult());
+        } else {
+            return value;
+        }
+    }
+
+    public String toString() {
+        if (isResult()) {
+            return "Result: " + result;
+        } else {
+            return "Error: " + error.getInfo();
+        }
+    }
+}
+```
+
+`ResultOrErrorMona`，注意看这个类名。我并没有拼错它，因为这个类目前还不是一个 Monad，这么命名它仅是为了好玩。
+
+### 第三步改进
+
+假设我们必须将下面两个函数链接起来：
+
+```java
+ResultOrError<Integer> f1(Integer value)
+ResultOrError<String>  f2(Integer value)
+```
+
+这是一张用来说明这一点的图片：
+
+![](../integer_string_functions_chain.png)
+
+我们的 `bind` 函数还不能处理这种情况，因为两个函数的输出类型不同 （`ResultOrError<Integer>` 和 `ResultOrError<String>`）。我们必须使 `bind` 更加通用，以便不同值类型的函数能够被链接起来。`bind` 的类型签名必须改变，从：
+
+```java
+static <R> Monad<R> bind(Monad<R> monad, Function<R, Monad<R>> function)
+```
+
+······到：
+
+```java
+static <R1, R2> Monad<R2> bind(Monad<R1> monad, Function<R1, Monad<R2>> function)
+```
+
+`bind` 的实现也必须调整，这里是新的类：
+
+```java
+public class ResultOrErrorMonad<R> {
+
+    private final R result;
+    private final SimpleError error;
+
+    public ResultOrErrorMonad(R result) {
+        this.result = result;
+        this.error = null;
+    }
+
+    public ResultOrErrorMonad(SimpleError error) {
+        this.result = null;
+        this.error = error;
+    }
+
+    public R getResult() {
+        return result;
+    }
+
+    public SimpleError getError() {
+        return error;
+    }
+
+    public boolean isResult() {
+        return error == null;
+    }
+
+    public boolean isError() {
+        return error != null;
+    }
+
+    static <R1, R2> ResultOrErrorMonad<R2> bind(ResultOrErrorMonad<R1> value, Function<R1, ResultOrErrorMonad<R2>> function) {
+        if (value.isResult()) {
+            return function.apply(value.result);
+        } else {
+            return new ResultOrErrorMonad<R2>(value.error);
+        }
+    }
+
+    public String toString() {
+        if (isResult()) {
+            return "Result: " + result.toString();
+        } else {
+            return "Error: " + error.toString();
+        }
+    }
+}
+```
+
+注意看类名，`ResultOrErrorMonad`。
+
+是的，这是一个 Monad。
+
+>在现实中，我们不会为属于 Monad 的类型添加 "Monad" 后缀，之所以把这个类命名为 `ResultOrErrorMonad` 是为了给读者表明这个类是一个 Monad。
+
+我们怎么能确认这个类就是一个 Monad 呢？
+
+虽然 Monad 这个词在数学中拥有非常精确的定义 （就像在数学中的所有东西一样），但是在编程语言的世界里，这个词还没有明确的定义。然而，维基百科上有一个[常见的定义](https://zh.wikipedia.org/wiki/%E5%8D%95%E5%AD%90_(%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B))。一个 Monad 由三部分组成：
+
+> 译者著：下面的定义摘抄自维基百科，其中的单子指 Monad。
+
+- **[类型构造器](https://zh.wikipedia.org/wiki/类型构造子) (*Type Constructor*) `M`，建造一个单子类型`M T`。**
+
+  换句话说，Monad 中包含的值有一个类型参数，在我们的例子中，它是该类声明中的类型参数 `R`。
+
+  ```java
+  class ResultOrErrorMonad<R>
+  ```
+
+- **[类型转换子](https://zh.wikipedia.org/wiki/类型转换) (Type Converter)，经常叫做 `unit` 或 `return`，将一个对象 `x` 嵌入到单子中。**
+
+  在 Haskell 中，类型转换器的定义是：`return :: a -> m a`
+
+  在类 Java 这样的语言中，这意味着必须有一个构造函数，它接收一个 `R` 类型的值，并返回一个包含该值，类型参数为 `M<R>` 的 Monad。
+
+  在我们的代码中，它是 `ResultOrErrorMonad` 类的构造函数。
+
+- **[组合子](https://zh.wikipedia.org/wiki/组合子) (*Combinator*)，典型的叫做 `bind`（[约束变量](https://zh.wikipedia.org/wiki/约束变量)的那个 bind），并表示为[中缀算子](https://zh.wikipedia.org/wiki/中缀表示法) `>>=`，去包装一个单体变量，接着把它插入到一个单体函数/表达式之中，结果为一个新的单体值：**
+
+  ```haskell
+  (mx >>= f) :: (M T, T -> M U) -> M U
+  ```
+
+  在 Haskell 中，`bind` 定义为 `(>>=) :: m a -> (a -> m b) -> m b`。
+
+  在我们的代码中，它是 `bind` 函数：
+
+  ```java
+  <R1, R2> ResultOrErrorMonad<R2> bind(ResultOrErrorMonad<R1> value, Function<R1, ResultOrErrorMonad<R2>> function)
+  ```
+
+维基百科上随后指出：“但要完全具备单子资格，这三部分还必须遵守一些定律：······”。
+
+在 [Haskell](https://hackage.haskell.org/package/base-4.12.0.0/docs/Control-Monad.html#t:Monad) 中，三条定律定义如下：
+
+- ```haskell
+  return a >>= k = k a
+  ```
+
+- ```haskell
+  m >>= return = m
+  ```
+
+- ```haskell
+  m >>= (\x -> k x >>= h) = (m >>= k) >>= h
+  ```
+
+讨论这些定律超出了本文的范围 （本篇文章仅是关于 Monad 的介绍），这些定律确保了 Monads 在任何情况都能良好运行。违反这些定律会导致微妙和痛苦的 Bug，[这里](https://www.reddit.com/r/haskell/comments/16iakr/what_happens_when_a_monad_violates_monadic_laws/)、[这里](https://stackoverflow.com/questions/12617664/a-simple-example-showing-that-io-doesnt-satisfy-the-monad-laws)、和[这里](https://www.quora.com/What-would-be-the-practical-implications-if-an-implementation-of-Haskells-Monad-typeclass-didnt-satisfy-the-monadic-laws)都有解释。据我所知，目前还没有任何一个编译器能够强制执行 Monad 定律。因此保证这些定律是否正确的被应用成为了开发者的责任，我只想说上面的 `ResultOrErrorMonad` 满足了 Monad 定律。
+
+## 最大程度的提高复用性
+
+除了给结果提供一个类型参数外，我们还可以为错误提供一个类型参数。这使得 Monad 更加可重用，因为现在你可以自由决定他们想要哪种类型的错误。举个例子，你可以看一下 F# 的 [`Result`](https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/results) 类型。
+
+最后，我们通过让程序员定义两个值的含义来让 Monad 更加可重复使用。在我们的例子中，一个值代表结果，而另一个代表错误。但是我们可以更抽象一点，我们可以创建一个 Monad，简单地容纳两个可能出现的值中的其中一个 —— `value_1` 或 `value_2`。而每个值的类型都可以由一个类型参数自由定义，这个 Monad 确实被一些函数式编程语言所支持。在 Haskell 中，它被称为 `Either`。它的构造函数被这样定义：
+
+```haskell
+data Either a b = Left a | Right b
+```
+
+以我们的 `ResultOrErrorMonad` 作为起点，在 Java 实现一个 `Either Monad` 是轻松的。
+
+>有些项目对可能执行失败的函数使用 `Either Monad`。在我看来，使用 `ResultOrError` 类型是一个更好的、不容易出错的选择（原因不在这里解释）。
+
+## 面向对象化
+
+现在我们知道了 Monad 在函数式编程语言的作用，让我们回到 OOP （*Object-Oriented Programming*，面向对象编程）的世界。我们能不能创建一个类似 OO-Monad 的东西？
+
+如果我们看一下 `ResultOrErrorMonad` 类，我们可以看到这个类里的所有东西都十分标准。只有一个例外，函数 `bind` 是该类的一个静态成员。这意味着我们不能对 `bind` 使用对象方法的点语法来调用。目前调用 `bind` 的语法为 `bind(v, f)`。但如果 `bind` 如果是类的非静态成员，我们就可以写成 `v.bind(f)`。这将使语法在嵌套调用的情况下更具可读性。
+
+幸运的是，使 `bind` 变为非静态成员是容易的。
+
+为了使 Monad 的功能更全面，我们也为错误值引入第二个类型参数。那么程序员就不需要使用 `SimpleError` 了，他们可以定义并使用自己的错误类。下面是面向对象风格的 `ResultOrError` 类：
+
+```java
+public class ResultOrError<R, E> {
+
+    private final R result;
+    private final E error;
+
+    private ResultOrError(R result, E error) {
+        this.result = result;
+        this.error = error;
+    }
+    
+    public static <R, E> ResultOrError<R, E> createResult(R result) {
+        return new ResultOrError<R, E>(result, null);
+    }
+
+    public static <R, E> ResultOrError<R, E> createError(E error) {
+        return new ResultOrError<R, E>(null, error);
+    }
+
+    public R getResult() {
+        return result;
+    }
+
+    public E getError() {
+        return error;
+    }
+
+    public boolean isResult() {
+        return error == null;
+    }
+
+    public boolean isError() {
+        return error != null;
+    }
+
+    public <R2> ResultOrError<R2, E> bind(Function<R, ResultOrError<R2, E>> function) {
+        if (isResult()) {
+            return function.apply(result);
+        } else {
+            return createError(error);
+        }
+    }
+
+    public String toString() {
+        if (isResult()) {
+            return "Result: " + result.toString();
+        } else {
+            return "Error: " + error.toString();
+        }
+    }
+}
+```
+
+现在 `enthuse` 函数体中使用 `bind` 的代码变得更加可读了，下面是之前的代码：
+
+```java
+return bind(bind(trim(sentence), v -> toUpperCase(v)), v -> appendExclam(v));
+```
+
+我们可以避免嵌套写法，下面是现在的代码：
+
+```java
+return trim(sentence).bind(v -> toUpperCase(v)).bind(v -> appendExclam(v));
+```
+
+所以 Monad 在面向对象语言的世界中有用么？是的，它们**可以有用**。
+
+需要强调一下 “可以” 这个词，因为这通常取决于我们想要实现什么。比方说，我们有一些很好的理由来 “不使用异常” 来处理错误，还记得我们在 *错误，但不要异常*章节中不得不写的丑陋错误处理代码么？：
+
+```java
+static ResultOrError enthuse(String sentence) {
+    ResultOrError trimmed = trim(sentence);
+    if (trimmed.isResult()) {
+        ResultOrError upperCased = toUpperCase(trimmed.getResult());
+        if (upperCased.isResult()) {
+            return appendExclam(upperCased.getResult());
+        } else {
+            return upperCased;
+        }
+    } else {
+        return trimmed;
+    }
+}
+```
+
+使用 Monad 来干掉样板代码：
+
+```java
+    static ResultOrError enthuse(String sentence) {
+        return trim(sentence).bind(v -> toUpperCase(v)).bind(v -> appendExclam(v));
+    }
+```
+
+太棒了！
+
+## 摘要
+
+理解 Monad 的关键是理解 `bind`（也叫 `chain`、`andThen` 等等）。函数 `bind` 是用来复合两个 Monadic 函数的。一个 Monadic 函数是一个接收 `T` 类型的值并返回一个包含该值对象的函数，Monadic 函数不能直接复合，因为调用的第一个函数类型输出类型与第二个函数的输入类型不兼容。`bind` 解决了这个问题。
+
+函数 `bind` 本身已经很有用了，但它仅是 Monad 的一部分。
+
+像 Java 的世界里，一个 Monad 是具有以下特征的类 （类型）`M`。
+
+- 一个类型参数 `T`，它定义了存储在 Monad 中的值类型 （例如：`M<T>`）。
+
+- 一个构造函数，接收一个 `T` 类型的值，并返回一个 Monad 且包含了 `M<T>` 值。
+
+  - 在类似于 Java 的语言中：
+
+    ```java
+    M<T> create(T value)
+    ```
+
+    ![](../create_function.png)
+
+  - 在 Haskell 中：
+
+    ```haskell
+    return :: a -> m a
+    ```
+
+- 用来复合两个 Monadic 函数的 `bind` 函数：
+
+  - 在类似于 Java 的语言中：
+
+    ```java
+    M<T2> bind(M<T1> monad, Function<T1, M<T2>> function)
+    ```
+
+    ![](../generic_bind_function.png)
+
+  - 在 Haskell 中：
+
+    ```haskell
+    (>>=) :: m a -> (a -> m b) -> m b
+    ```
+
+一个 Monad 必须遵守三条 Monad 定律，这些定律确保 Monad 在所有情况下都能良好运行。
+
+Monad 主要用于函数式编程语言，因为这些语言依赖函数复合。但是它们也可以在其他范式的编程语言发挥作用，例如支持范型和高阶函数的面向对象编程语言。
+
+## 结语
+
+正如标题所提到的，这篇文章仅是对 Monad 的介绍。它没有涵盖 Monad 的所有范围，没有展示 Monad 其他有用的例子（例：`Maybe Monad`、`IO Momad`、`State Monad` 等）。而且它完全忽略了范畴论 (*Category Theory*)。即 Monad 的数学背景，对于那些想了解更多的人来说，互联网上有大量信息可以去查阅学习它们。
+
+希望这篇文章帮助大家掌握 Monad 的要领，看到它们的魅力，并了解它们如何改进代码和简化你的生活。
+
+**"HAPPY MONADING!"**
