@@ -23,7 +23,7 @@ Monads 在大多数纯函数式编程语言中都被大量使用。例如在 Has
 - 为什么它们会被用在函数式编程语言中？它们解决了什么问题？
 - 我们如何在 C#、Java、Python 等语言中使用 Monad？我们应该这么做么？
 
-看完这篇文章，希望你能对这些问题对答如流。
+希望你在看完本篇文章后能够准确理解以上的问题。
 
 >本文针对的是具有良好的非函数式编程语言背景的软件开发人员。
 >
@@ -83,7 +83,7 @@ HELLO BOB!
 
 ## 只要函数！
 
-在之前的 Java 例子中，我们使用例如像 `sentence.trim()` 的对象方法。然而，由于这篇文章是关于 Monads 的，我们必须意识到纯函数式语言并没有在对象上执行的方法。基于 [Lambda 演算](https://zh.wikipedia.org/wiki/%CE%9B%E6%BC%94%E7%AE%97)的函数式编程语言只有无副作用的函数，接受一个输入，然后返回一个结果。
+在之前的 Java 例子中，我们使用例如像 `sentence.trim()` 的对象方法。然而，由于这篇文章是关于 Monads 的，我们必须意识到纯函数式语言并没有在对象上执行的方法。基于 [Lambda 演算](https://zh.wikipedia.org/wiki/%CE%9B%E6%BC%94%E7%AE%97) 的函数式编程语言只有无副作用的函数，接受一个输入，然后返回一个结果。
 
 因此，让我们仅使用纯函数来重写之前的代码，依然使用 Java。这一点很重要，因为我们必须使用函数，才能最终理解为什么要发明 Monads。
 
@@ -138,7 +138,7 @@ HELLO BOB!
 
 在函数式编程语言中，嵌套的函数调用（例如我们的：`appendExclam(toUpperCase(trim(sentence)))`）被称为**函数复合**。
 
->函数复合 (*Function composition*) 是函数式编程语言里的面包和黄油。在 Lambda 演算中，一个函数体是一个单一的表达式，复杂的表达式可以通过函数复合来创建。
+>函数复合 (*Function Composition*) 是函数式编程语言里的面包和黄油。在 Lambda 演算中，一个函数体是一个单一的表达式，复杂的表达式可以通过函数复合来创建。
 >
 >![](../function_composition.png)
 
@@ -182,7 +182,7 @@ static String enthuse(String sentence) {
 
 该函数接收两个函数作为输入 (`b → c` 和 `a → b`)，并返回另一个函数 (`a → c`)，它是两个输入函数的复合。
 
-因此，要说明函数 `h` 是函数 `f` 和 `g` 的复合，在 Haskell 可以这样表示：
+因此，要声明函数 `h` 是函数 `f` 和 `g` 的复合，在 Haskell 可以这样表示：
 
 ```haskell
 h = f . g
@@ -668,7 +668,7 @@ public class ResultOrErrorMonad<R> {
 
 > 译者著：下面的定义摘抄自维基百科，其中的单子指 Monad。
 
-- **[类型构造器](https://zh.wikipedia.org/wiki/类型构造子) (*Type Constructor*) `M`，建造一个单子类型`M T`。**
+- **[类型构造器](https://zh.wikipedia.org/wiki/类型构造子) (*Type Constructor*) `M`，建造一个单子类型 `M T`。**
 
   换句话说，Monad 中包含的值有一个类型参数，在我们的例子中，它是该类声明中的类型参数 `R`。
 
@@ -807,7 +807,7 @@ return trim(sentence).bind(v -> toUpperCase(v)).bind(v -> appendExclam(v));
 
 所以 Monad 在面向对象语言的世界中有用么？是的，它们**可以有用**。
 
-需要强调一下 “可以” 这个词，因为这通常取决于我们想要实现什么。比方说，我们有一些很好的理由来 “不使用异常” 来处理错误，还记得我们在 *错误，但不要异常*章节中不得不写的丑陋错误处理代码么？：
+需要强调一下 “可以” 这个词，因为这通常取决于我们想要实现什么。比方说，我们有一些很好的理由来 “不使用异常” 来处理错误，还记得我们在 *错误，但不要异常* 章节中不得不写的丑陋错误处理代码么？：
 
 ```java
 static ResultOrError enthuse(String sentence) {
