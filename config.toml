@@ -5,7 +5,7 @@ taxonomies = [
 ]
 
 # The URL the site will be built for
-base_url = "https://czisky.github.io"
+base_url = "https://kirraobj.ink"
 
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
