@@ -11,7 +11,7 @@ tags = ["functional programming", "java"]
 
 ## 简介
 
-Monads 在大多数纯函数式编程语言中都被大量使用。例如在 Haskell 中，它们是必不可少的，并且出现在各种应用和库 （轮子）中。
+许多纯函数式语言中都大量使用 Monads。例如在 Haskell 中，它们是必不可少的，并且出现在各种应用和库 （轮子）中。
 
 另一方面，Monads 却很少用于流行的、非纯函数式的编程语言中，例如 C#、Java 和 Python 等。
 
