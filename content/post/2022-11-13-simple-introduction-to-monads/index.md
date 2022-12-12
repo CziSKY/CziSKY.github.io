@@ -126,7 +126,7 @@ return appendExclam(toUpperCase(trim(sentence)));
 - 第三步：将第二步的结果输入给 `appendExclam`。
 - 第四步：将第三步的结果作为函数 `enthuse` 的结果返回。
 
-![](../hello_bob_functions_chains.png)
+![](hello_bob_functions_chains.png)
 
 为了查看一切是否仍然正常，我们可以执行测试，结果仍然是一样的。
 
@@ -140,7 +140,7 @@ HELLO BOB!
 
 >函数复合 (*Function Composition*) 是函数式编程语言里的面包和黄油。在 Lambda 演算中，一个函数体是一个单一的表达式，复杂的表达式可以通过函数复合来创建。
 >
->![](../function_composition.png)
+>![](function_composition.png)
 
 正如我们将在后面看到的，Monad 为我们复合函数时可能出现的问题提供了一个解决方案。但是在深入之前，让我们看看不同环境下的函数复合。熟悉这一重要概念的读者可以跳到下一章。
 
@@ -329,11 +329,11 @@ static String enthuse(String sentence) {
 
 在之前的代码中，当函数返回字符串时，一个函数的输出可以输入到下一个函数中。
 
-![](../string_functions_chains.png)
+![](string_functions_chains.png)
 
 但现在这样做是不行的了。
 
-![](../string_ROE_functions.png)
+![](string_ROE_functions.png)
 
 然而，我们仍然在 Java 中像这样实现 `enthuse`：
 
@@ -387,7 +387,7 @@ Monads 来拯救我们了！ 它为这种问题提供了一个通用的解决方
 
 接下来我们必须决定 `bind` 的输入是什么，以及它应该返回什么。让我们来考虑链接函数 `trim` 和 `toUpperCase` 的情况。
 
-![](../trim_toUppercase_functions_chains.png)
+![](trim_toUppercase_functions_chains.png)
 
 要实现的逻辑必须按以下方式工作：
 
@@ -403,7 +403,7 @@ Monads 来拯救我们了！ 它为这种问题提供了一个通用的解决方
 
 所以现在我们知道了 `bind` 的类型签名：
 
-![](../string_ROE_bind_function.png)
+![](string_ROE_bind_function.png)
 
 在 Java 里，我们可以这样写：
 
@@ -590,7 +590,7 @@ ResultOrError<String>  f2(Integer value)
 
 这是一张用来说明这一点的图片：
 
-![](../integer_string_functions_chain.png)
+![](integer_string_functions_chain.png)
 
 我们的 `bind` 函数还不能处理这种情况，因为两个函数的输出类型不同 （`ResultOrError<Integer>` 和 `ResultOrError<String>`）。我们必须使 `bind` 更加通用，以便不同值类型的函数能够被链接起来。`bind` 的类型签名必须改变，从：
 
@@ -853,7 +853,7 @@ static ResultOrError enthuse(String sentence) {
     M<T> create(T value)
     ```
 
-    ![](../create_function.png)
+    ![](create_function.png)
 
   - 在 Haskell 中：
 
@@ -869,7 +869,7 @@ static ResultOrError enthuse(String sentence) {
     M<T2> bind(M<T1> monad, Function<T1, M<T2>> function)
     ```
 
-    ![](../generic_bind_function.png)
+    ![](generic_bind_function.png)
 
   - 在 Haskell 中：
 

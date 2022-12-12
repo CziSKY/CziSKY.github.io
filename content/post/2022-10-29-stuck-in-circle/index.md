@@ -24,4 +24,4 @@ tags = ["碎碎念"]
 
 我会去摆脱这个圈。
 
-![](https://i.ibb.co/pQrfZZD/light.jpg)
+![](light.png)
