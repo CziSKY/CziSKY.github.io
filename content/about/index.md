@@ -2,6 +2,7 @@
 title = "关于我"
 date = 2004-01-12
 template = "post-page.html"
+
 +++
 
 我是一名高三学生，因为一些原因转为挂读。刚从一家厦门的创业公司离职 （工作准一年），目前家里蹲，今年上大学（专科）。
@@ -15,3 +16,4 @@ template = "post-page.html"
 > + QQ / TIM (常用): 2119411178
 > + GitHub: https://github.com/CziSKY
 > + E-mail: c@skymc.me
+
