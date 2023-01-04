@@ -12,9 +12,9 @@ template = "post-page.html"
 对函数式编程 (***λ***, Functional Programming) 和编程语言理论 (Programming Language Theory) 及相关学科感兴趣，正在用业余时间学习。
 
 > 这里是我的朋友们，如果有机会我想找他们开银趴，如果他们不嫌弃我的话。
-> + [寒雨](https://blog.coldrain.ink/)
-> + [颉文](https://blog.gfmc.top/)
-> + [Roife](https://roife.github.io/)
+> - [寒雨](https://blog.coldrain.ink/)
+> - [颉文](https://blog.gfmc.top/)
+> - [Roife](https://roife.github.io/)
 
 > 你可以通过以下几种方式联系到我：
 >
