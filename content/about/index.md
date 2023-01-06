@@ -11,7 +11,7 @@ template = "post-page.html"
 
 对函数式编程 (***λ***, Functional Programming) 和编程语言理论 (Programming Language Theory) 及相关学科感兴趣，正在用业余时间学习。
 
-> 这里是我的朋友们：
+> 这里是我的朋友们，我非常感谢他们，有他们的帮助我才能撑到现在。
 > - [寒雨](https://blog.coldrain.ink/)
 > - [颉文](https://blog.gfmc.top/)
 > - [Roife](https://roife.github.io/)
