@@ -23,6 +23,14 @@ template = "post-page.html"
 > - [Roife](https://roife.github.io/)
 > - [Wtz_LASR](https://wtzlas.github.io/)
 
+> 这里是给予过我帮助的大佬们，即使他们有的仅仅是给了我两句建议，但在最自我否定的时期这对我来说无疑是黑暗中的一束光：
+> - [千里冰封](https://ice1000.org/)
+> - [魔理沙](https://github.com/MarisaKirisame)
+> - [能哥](https://disksing.com/)
+> - [柠檬](https://lemonhx.moe/)
+> - [Kiv](https://kivzone.com/)
+> - [yetone](https://github.com/yetone)
+
 > 你可以通过以下几种方式联系到我：
 >
 > + QQ / TIM (常用): 2119411178
