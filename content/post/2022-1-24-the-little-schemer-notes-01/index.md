@@ -19,8 +19,7 @@ tags = ["programming language", "scheme"]
 车 (`car`) 和 成都人 (`cdr`)：
 
 - `(car l)` 表示取 `l` 这个 `List` 中的头元素，就像 Haskell 的 `head` 函数。例如：`(car '((a b c) x y z)) => '(a b c)`
-- `(cdr l)` 表示取 `l` 这个 `List` 中除了头元素的所有元素，就像 Haskell 的 `tail` 函数。当 `List` 只有一个元素时返回 `()`。就像 Haskell 中的 `tail`
-  函数，例如：`(cdr '((a b c) x y z)) => '(x y z)`。
+- `(cdr l)` 表示取 `l` 这个 `List` 中除了头元素的所有元素，就像 Haskell 的 `tail` 函数。当 `List` 只有一个元素时返回 `()`。例如：`(cdr '((a b c) x y z)) => '(x y z)`。
 
 其中 `car` 和 `cdr` 都不能对 `()` 或 `Atom` 进行操作。
 
