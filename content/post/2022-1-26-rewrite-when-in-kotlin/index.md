@@ -198,7 +198,7 @@ matcher(VoiceRecording("Joe", "voicerecording.org/id/123")) {
 // Result: "You received a Voice Recording from Joe! Click the link to hear it: voicerecording.org/id/123"
 ```
 
-你可以通过这个来实现 Scala 的那个例子，只不过比较别扭。比如说：
+你可以通过这个来实现我上面说的那个 Scala 的例子，只不过比较别扭。比如说：
 
 ```kotlin
 interface Notification
