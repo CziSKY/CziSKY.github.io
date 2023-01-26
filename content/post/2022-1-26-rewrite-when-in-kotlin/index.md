@@ -197,3 +197,23 @@ matcher(VoiceRecording("Joe", "voicerecording.org/id/123")) {
 }.match()
 // Result: "You received a Voice Recording from Joe! Click the link to hear it: voicerecording.org/id/123"
 ```
+
+你可以通过这个来实现 Scala 的那个例子，只不过比较别扭。比如说：
+
+```kotlin
+interface Notification
+
+data class Email(val sender: String, val title: String, val body: String) : Notification
+
+data class SMS(val caller: String, val message: String) : Notification
+
+data class VoiceRecording(val contactName: String, val link: String) : Notification
+
+matcher(VoiceRecording("Joe", "voicerecording.org/id/123")) {
+    case<Email> { "You got an email from $sender with title: $title" }
+    case<SMS> { "You got an SMS from $caller! Message: $message" }
+    case<VoiceRecording>({ it.contactName == "闲蛋" }) { "You received a Voice Recording from $contactName! Click the link to hear it: $link" }
+    default("Match error.")
+}.match()
+// Result: "Match error."
+```
