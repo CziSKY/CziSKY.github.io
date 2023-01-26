@@ -102,7 +102,7 @@ inline fun <reified T> case(block: (T) -> Boolean = { true }, noinline result: T
 
 因为 JVM 底层的范型擦除机制，正常情况下我们并不能把这个 `T` 直接传过来然后跟参数转换，我们使用 Kotlin 的 `reified` 特性来解决这个问题。
 
-此外，我们还需要一个分支，这个分支代表所有结果都没有匹配成功的返回。在 Java 中它为 `Switch` 中的 `default:`，在 Kotlin 中它为 `when` 中的 `else`。
+此外，我们还需要一个分支，这个分支代表所有结果都没有匹配成功的返回。在 Java 中它为 `Switch` 中的 `default`，在 Kotlin 中它为 `when` 中的 `else`。
 
 ```kotlin
 fun default(result: R) {
