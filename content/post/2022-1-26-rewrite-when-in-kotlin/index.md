@@ -217,3 +217,5 @@ matcher(VoiceRecording("Joe", "voicerecording.org/id/123")) {
 }.match()
 // Result: "Match error."
 ```
+
+我把这个丢人的玩具开源在了 [Github](https://github.com/CziSKY/KMatcher) 上。
