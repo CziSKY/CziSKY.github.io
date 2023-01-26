@@ -1,6 +1,6 @@
 +++
 title = "在 Kotlin 用 36 行实现 when 表达式"
-date = 2023-01-24
+date = 2023-01-26
 [taxonomies]
 categories = ["coding"]
 tags = ["kotlin"]
@@ -64,7 +64,7 @@ class MatcherBranch<R, O>(val value: O, val result: O.() -> R) {
 }
 ```
 
-范型 `R` 表示的是最终我们返回的结果类型，`O` 表示传入的匹配类型。这两个类型都由更上层提供给我们，我们再新建一个 Matcher 类：
+范型 `R` 表示的是最终我们返回的结果类型，`O` 表示传入的匹配类型。这两个类型都由更上层提供给我们，我们再新建一个 `Matcher` 类：
 
 ```kotlin
 class Matcher<R, O>(val value: O) {
