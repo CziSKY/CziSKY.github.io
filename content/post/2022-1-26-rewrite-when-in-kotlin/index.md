@@ -127,6 +127,7 @@ matcher(VoiceRecording("Joe", "voicerecording.org/id/123")) {
     case<SMS> { "You got an SMS from $caller! Message: $message" }
     case<VoiceRecording> { "You received a Voice Recording from $contactName! Click the link to hear it: $link" }
 }.match()
+// Result: "Match Error"
 ```
 
 我们给 `MatcherBranch` 类加上一个变量来解决这个问题：
@@ -186,7 +187,7 @@ VoiceRecording("Joe", "voicerecording.org/id/123").matcher {
     case<VoiceRecording> { "You received a Voice Recording from $contactName! Click the link to hear it: $link" }
     default("Match error.")
 }.match()
-// Result: You received a Voice Recording from Joe! Click the link to hear it: voicerecording.org/id/123
+// Result: "You received a Voice Recording from Joe! Click the link to hear it: voicerecording.org/id/123"
 
 matcher(VoiceRecording("Joe", "voicerecording.org/id/123")) {
     case<Email> { "You got an email from $sender with title: $title" }
@@ -194,5 +195,5 @@ matcher(VoiceRecording("Joe", "voicerecording.org/id/123")) {
     case<VoiceRecording> { "You received a Voice Recording from $contactName! Click the link to hear it: $link" }
     default("Match error.")
 }.match()
-// Result: You received a Voice Recording from Joe! Click the link to hear it: voicerecording.org/id/123
+// Result: "You received a Voice Recording from Joe! Click the link to hear it: voicerecording.org/id/123"
 ```
