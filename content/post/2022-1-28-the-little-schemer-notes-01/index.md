@@ -6,6 +6,8 @@ categories = ["notes"]
 tags = ["programming language", "scheme"]
 +++
 
+# Number Games
+
 整数集 ℤ 内的所有元素均为 `Atom`，在此基础上我们可以定义一些函数：
 
 `(add1 n)` 表示为将整数 `Atom n` + 1，例如 `(add1 '68) => '69` 定义如下：
