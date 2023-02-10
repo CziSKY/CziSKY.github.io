@@ -19,11 +19,13 @@ template = "post-page.html"
 
 > 这里是我的朋友们，我非常感谢他们。如果没有他们的帮助我撑不到现在。
 > - [坏黑](https://github.com/Bkm016)
-> - [寒雨](https://blog.coldrain.ink/)
-> - [颉文](https://blog.gfmc.top/)
 > - [九零](https://9032676.com/)
-> - [Roife](https://roife.github.io/)
 > - [Wtz_LASR](https://wtzlas.github.io/)
+> - [ATRI](https://summonsteve.github.io/)
+> - [Roife](https://roife.github.io/)
+> - [颉文](https://blog.gfmc.top/)
+> - [寒雨](https://blog.coldrain.ink/)
+
 
 > 这里是给予过我帮助的大佬们，即使他们有的仅仅是给了我两句建议，但在最自我否定的时期这对我来说无疑是黑暗中的一束光：
 > - [千里冰封](https://ice1000.org/)
