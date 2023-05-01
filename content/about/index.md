@@ -5,7 +5,7 @@ template = "post-page.html"
 
 +++
 
-我是一名高三学生，因为一些原因转为挂读。刚从一家厦门的创业公司离职 （工作准一年），郑州本地 AIGC Startup 公司实习中 (开始自 4 月中旬)，九月上大学（专科）。
+我是一名高三学生，因为一些原因转为挂读。刚从一家厦门的创业公司离职 （工作准一年），郑州本地 AIGC Startup 公司实习中（开始自 4 月中旬），九月上大学（专科）。
 
 早期因爱好接触到了 [Minecraft](https://en.wikipedia.org/wiki/Minecraft) 这款游戏，并由此借机接触到了编程，较为擅长 Kotlin / Java / Python 语言。不熟但也能写点的有 Haskell / Scala **3** / Coq 语言。
 
