@@ -62,7 +62,7 @@ let id : ID = lambda (T : Type) . lambda (a : T) . a
 
 ## Pushing door to the future
 
-注意，`(T : Type)` 在 Dependent Type 中是一个实参，在没有编译器额外 Handling 的情况下调用该函数需要传入一个类型实参，例 `f number 114514`
+注意，`(T : Type)` 在 Dependent Type 中是一个参数，在没有编译器额外 Handling 的情况下调用该函数需要传入一个类型作为实参，例 `f number 114514`
 
 但你可以实现类型推导：[dependent type 下的类型推导 (meta variables)
 ](https://zhuanlan.zhihu.com/p/74410702)。
