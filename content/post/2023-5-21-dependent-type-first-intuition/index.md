@@ -7,7 +7,7 @@ tags = ["programming language"]
 
 +++
 
-> 前几天给 [Anqur](https://github.com/rowscript/rowscript) 大佬的 `RowScript` 提了个 Issue，然后 QQ 突然被加好友并被介绍了最简单的依值类型 (Dependent Type) 是什么样的。所以归纳整理产出点垃圾强化下印象。
+> 前几天给 [Anqur](https://github.com/anqurvanillapy) 大佬的 `RowScript` 提了个 Issue，然后 QQ 突然被加好友并被介绍了最简单的依值类型 (Dependent Type) 是什么样的。所以归纳整理产出点垃圾强化下印象。
 
 > 在这里也安利一下，[RowScript](https://github.com/rowscript/rowscript) 是还在前期开发中 (In heavy development)，能转译到 JavaScript 的纯函数式编程语言。目标用户群体是 JS 社区。
 
