@@ -59,3 +59,10 @@ let id : ID = lambda (T : Type) . lambda (a : T) . a
 ```
 
 这就是依值类型 (Dependent Type)。就像我们日常编程使用函数中参数定义了什么，那么函数的内部就能使用那个参数。Dependent Type 多了一个你在 `Function Type` 的 "参数" 里定义了什么，那么在它的 Body 中就能用那个参数。
+
+## Pushing door to the future
+
+注意，`(T : Type)` 在 Dependent Type 中是一个实参，在没有编译器额外 Handling 的情况下调用该函数需要传入一个类型实参，例 `f number 114514`
+
+但你可以实现类型推导：[dependent type 下的类型推导 (meta variables)
+](https://zhuanlan.zhihu.com/p/74410702)。
