@@ -5,9 +5,9 @@ template = "post-page.html"
 
 +++
 
-我是一名高三学生，因为一些原因转为挂读。刚从一家厦门的创业公司离职 （工作准一年），郑州本地 AIGC Startup 公司实习中（开始自 4 月中旬），九月上大学（专科）。
+我是一名专科一年级，因为一些原因转为挂读。刚从一家厦门的创业公司离职 （工作准一年），从四月份开始在一家郑州的 AI Startup 远程全职工作。
 
-早期因爱好接触到了 [Minecraft](https://en.wikipedia.org/wiki/Minecraft) 这款游戏，并由此借机接触到了编程，较为擅长 Kotlin / Java / Python 语言。不熟但也能写点的有 JavaScript / Haskell 语言。
+早期因爱好接触到了 [Minecraft](https://en.wikipedia.org/wiki/Minecraft) 这款游戏，并由此借机接触到了编程，较为擅长 Kotlin / Java / Python 语言。不熟但也能写点的有 Haskell / Golang / JS (TS) 语言。
 
 对函数式编程 (***λ***, Functional Programming) 和编程语言理论 (Programming Language Theory) 及相关学科感兴趣，正在用业余时间学习。
 
