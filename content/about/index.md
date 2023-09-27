@@ -5,7 +5,7 @@ template = "post-page.html"
 
 +++
 
-我是一名大学 (专科) 一年级学生 (FreshMan)，刚从一家厦门的创业公司离职 （工作准一年），从四月份开始在一家郑州的 AI Startup 远程全职工作。
+我是一名大学（专科）一年级学生（FreshMan），刚从一家厦门的创业公司离职 （工作准一年），从四月份开始在一家郑州的 AI Startup 远程全职工作。
 
 早期因爱好接触到了 [Minecraft](https://en.wikipedia.org/wiki/Minecraft) 这款游戏，并由此借机接触到了编程，较为擅长 Kotlin / Java / Python 语言。不熟但也能写点的有 Haskell / Golang / JS (TS) 语言。
 
