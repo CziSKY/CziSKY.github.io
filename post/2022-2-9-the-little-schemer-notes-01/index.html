@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>The Little Schemer 笔记 —— 壹 | </title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;favicon.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+
+  <script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;czisky.github.io&#x2F;images&#x2F;logo.png" alt=""
+          width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body onload="getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">The Little Schemer 笔记 —— 壹</div>
+</p>
+<p>
+  <div class="date_postpage">2023-02-09</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://czisky.github.io/categories/notes/">/notes</a>
+      
+  
+  
+      
+      &emsp;<a href="https://czisky.github.io/tags/programming-language/">#programming language</a>
+      
+      &emsp;<a href="https://czisky.github.io/tags/scheme/">#scheme</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <h1 id="number-games">Number Games</h1>
+<p>整数集 ℤ 内的所有元素均为 <code>Atom</code>，在此基础上我们可以定义一些函数：</p>
+<p><code>(add1 n)</code> 表示为将整数 <code>Atom n</code> + 1，例如 <code>(add1 '68) =&gt; '69</code> 定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define add1
+  lambda (n)
+    (+ n 1)))))
+</code></pre>
+<p><code>(sub1 n)</code> 表示为将整数 <code>Atom n</code> - 1，例如 <code>(sub1 '68) =&gt; '67</code> 定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define sub1
+  lambda (n)
+    (- n 1)))))
+</code></pre>
+<p><code>(o+ m n)</code> 将整数 <code>Atom m</code> 与 <code>Atom n</code> 相加，例如 <code>(o+ '1 '2) =&gt; '3</code>。定义为：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define o+
+  (lambda (m n)
+   (cond
+    ((zero? m) n)
+    (else (add1 (o+ n (sub1 m)))))))
+</code></pre>
+<p><code>(o- m n)</code> 将整数 <code>Atom m</code> 与 <code>Atom n</code> 相减，例如 <code>(o+ '2 '1) =&gt; '1</code>。定义为：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define o-
+  (lambda (m n)
+   (cond
+    ((zero? m) n)
+    (else (sub1 (o- n (sub1 m)))))))
+</code></pre>
+<p><code>tup</code> 是由一个数字构成的 <code>List</code>，例如 <code>'(1, 2, 3)</code>，<code>()</code> 也可表示为 <code>Null tup</code>。</p>
+<p><code>(add tup)</code> 求 <code>tup</code> 中的所有数字之和，定义为：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define addtup
+  (lambda (tup)
+    (cond
+     ((null? tup) 0)
+     (else (o+ (car tup)
+               (addtup (cdr tup)))))))
+</code></pre>
+<p><code>(o* a b)</code> 返回 <code>a * b</code></p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define o*
+  (lambda (a b)
+    (cond
+     ((zero? b) 0)
+     (else (o+ a (o* a (sub1 b)))))))
+</code></pre>
+<p><code>(tup+ tup1 tup2)</code> 将 <code>tup1</code> 中元素与 <code>tup2</code> 元素进行相加，对于空元素则为 <code>0</code>。例如：<code>(tup+ '(1 2 3) '(3 4)) =&gt; '(4 6 3)</code>，定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define tup+
+  (lambda (tup1 tup2)
+    (cond
+     ((and (null? tup1)
+           (null? tup2)) &#x27;())
+     ((null? tup1) tup2)
+     ((null? tup2) tup1)
+     (else (cons (o+ (car tup1) (car tup2))
+                 (tup+ (cdr tup1) (cdr tup2)))))))
+</code></pre>
+<p><code>(&gt; a b)</code> 返回整数 <code>Atom a</code> 是否大于整数 <code>Atom b</code>，根据下面的定义我们也能轻松推出 <code>(&lt; a b)</code>。定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define &gt;
+  (lambda (a b)
+    (cond
+     ((zero? a) #f)
+     ((zero? b) #t)
+     (else (&gt; (sub1 a) (sub1 b))))))
+</code></pre>
+<p><code>(= a b)</code> 返回整数 <code>Atom a</code> 是否等于整数 <code>Atom b</code>，定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define =
+  (lambda (a b)
+    (cond
+     ((&gt; a b) #f)
+     ((&lt; a b) #f)
+     (else #t))))
+</code></pre>
+<p><code>(o/ a b)</code> 返回整数 <code>Atom a</code> 除以 <code>Atom b</code> 的结果，定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define o&#x2F;
+  (lambda (a b)
+    (cond
+     ((&lt; a b) 0)
+     (else (add1 (o&#x2F; (o- a b) b))))))
+</code></pre>
+<p><code>(length lat)</code> 计算 <code>lat</code> 的长度，定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define length
+  (lambda (lat)
+    (cond
+     ((null? lat) 0)
+     (else (add1 (length (cdr lat)))))))
+</code></pre>
+<p><code>(pick n lat)</code> 返回计算 <code>lat</code> 中第 <code>n</code> 个元素，定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define pick
+  (lambda (n lat)
+    (cond
+     ((zero? (sub1 n)) (car lat))
+     (else (pick (sub1 n) (cdr lat))))))
+</code></pre>
+<p><code>(rempick n lat)</code> 返回去掉第 <code>n</code> 个元素后的 <code>lat</code>，跟 Haskell 的 <code>choose</code> 函数等价，定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define rempick
+  (lambda (n lat)
+    (cond
+     ((zero? (sub1 n)) (cdr lat))
+     (else (cons (car lat)
+                 (rempick (sub1 n) (cdr lat)))))))
+</code></pre>
+<p><code>number? a</code> 用来判断 <code>a</code> 是不是一个整数 <code>Atom</code>，它是一个基础函数。</p>
+<p><code>(non-nums lat)</code> 去除 <code>lat</code> 中的所有数字，定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define non-nums
+  (lambda (lat)
+    (cond
+     ((null? lat) &#x27;())
+     ((number? (car lat)) (non-nums (cdr lat)))
+     (else (cons (car lat)
+                 (non-nums (cdr lat)))))))
+</code></pre>
+<p><code>(eqan? a b)</code> 比较 <code>Atom a</code> 和 <code>Atom b</code> 是否相同，定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define eqan?
+  (lambda (a b)
+    (cond
+     ((and (number? a)
+           (number? b) (= a b)))
+     ((or (number? a)
+          (number? b)) #f)
+     (else (eq? a b)))))
+</code></pre>
+<p><code>(occur a lat)</code> 统计 <code>a</code> 在 <code>lat</code> 中出现的次数，定义如下：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define occur
+  (lambda (a lat)
+    (cond
+     ((null? lat) 0)
+     ((eq? (car lat) a) (add1 (occur a (cdr lat))))
+     (else (occur a (cdr lat))))))
+</code></pre>
+<p>在上面的代码中，我们经常使用 <code>(zero? (sub1 a))</code> 来纠正判断下标，它的意思是整数 <code>Atom a</code> + 1 是否等于 0。我们可以使它更清晰一点：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define one?
+  (lambda (n)
+    (= n 1)))
+</code></pre>
+<p>然后我们可以改写 <code>rempick</code> 函数：</p>
+<pre data-lang="scheme" class="language-scheme "><code class="language-scheme" data-lang="scheme">(define rempick
+  (lambda (n lat)
+    (cond
+     (one? n) (cdr lat))
+     (else (cons (car lat)
+                 (rempick (sub1 n) (cdr lat)))))))
+</code></pre>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/"></a>&emsp;&copy; 闲蛋 (kirraObj)<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a
+    href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

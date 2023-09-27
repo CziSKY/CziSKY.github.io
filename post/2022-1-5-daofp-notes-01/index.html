@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>DaoFP 读书笔记 —— Clean Slate | </title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;favicon.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+
+  <script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;czisky.github.io&#x2F;images&#x2F;logo.png" alt=""
+          width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body onload="getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">DaoFP 读书笔记 —— Clean Slate</div>
+</p>
+<p>
+  <div class="date_postpage">2023-01-05</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://czisky.github.io/categories/notes/">/notes</a>
+      
+  
+  
+      
+      &emsp;<a href="https://czisky.github.io/tags/functional-programming/">#functional programming</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <h2 id="1-1-types-functions">1.1 Types &amp; Functions</h2>
+<blockquote>
+<p>你可能有一些对于编程的先入之见，认为编程从类型和函数开始。摆脱它们！它们会使你的脑袋蒙上阴影。
+不要考虑硬件是怎么实现的，计算机只是众多计算模型的一种，你完全可以只在脑海中或用纸和笔进行计算。它的物理实现层与编程思想无关。</p>
+</blockquote>
+<p>老子可能说过：<em>类型可道非类型也</em>，换句话来说：<strong>类型</strong> (Type) 是一种基本概念，它无法被定义。在类型论 (Type Thoery)、范畴论 (Category Thoery) 和逻辑论 (Logic Thoery) 里面它们被称为对象 (
+Object) 或命题 (Proposition)。</p>
+<p>类型本身没有任何意义，它的特别之处是它如何<strong>连接</strong>到其他的类型。连接由<strong>箭头</strong> (Arrow) 描述。箭头有一种类型作为其来源，有一种类型作为其目标。一个箭头的来源和目标可能是相同的，在此情况下箭头呈环绕状。</p>
+<p>可能不止有一种类型，所以我们需要命名。于是我们有了类型 <code>a</code>、<code>b</code> 还有 <code>c</code>。还有类型 <code>Int</code>、<code>Bool</code> 和 <code>Double</code>。</p>
+<p>类型之间的箭头被称为<strong>函数</strong> (Function)、对象之间的箭头被称为<strong>态射</strong> (Morphism)、命题之间的箭头被称为<strong>蕴含</strong> (Entailment)
+。它们用来描述不同数学领域中的箭头。在逻辑论上，我们将两个对象之间的箭头解释为 <code>a</code> 蕴含 <code>b</code>。或是 <code>b</code> 可从 <code>a</code> 导出。</p>
+<p>两个类型之间可能不止有一个箭头，这意味着我们同样需要给它们命名。举个例子。下面是类型 <code>a</code> 和类型 <code>b</code> 之间的箭头，称为 <code>f</code>。</p>
+<p><img src="https://czisky.github.io/post/2022-1-5-daofp-notes-01/01.png" alt="" /></p>
+<p>你可以说为这个函数 <code>f</code> 接收了一个 <code>a</code> 类型的参数，产出了类型 <code>b</code> 的结果。也可以说是一个若 <code>a</code> 为真 (True)，则 <code>b</code> 也为真的的证明 <code>f</code>。</p>
+<h2 id="1-2-yin-yang">1.2 Yin &amp; Yang</h2>
+<p>一个对象由其箭头的连接定义，箭头是两个对象相连的事实或证明。有时这里没有证明，则两个对象断开连接；有些时候有很多证明，而有些时候只有一条证明 —— 一根证明两个对象相连的<strong>唯一</strong>箭头。</p>
+<p>唯一是什么意思？它符合了下面两个定义：</p>
+<ul>
+<li>一个对象，它对每一个对象（包括它自己）都有一个唯一的<strong>出射箭头</strong> (Outgoing Arrow)，被称为<strong>始对象</strong> (Initial Object)。</li>
+<li>一个对象，每一个对象都对它有一个唯一的<strong>入射箭头</strong> (Incoming Arrow)，被称为<strong>终对象</strong> (Terminal Object)。它是始对象的对偶。</li>
+</ul>
+<p>在数学上，始对象通常用 <code>0</code> 表示，而终对象用 <code>1</code> 来表示。</p>
+<p>始对象是一切的来源，作为一种类型。它在 Haskell 被称为 <code>Void</code>，既然有一个箭头从 <code>Void</code> 到万物。所以也有一个从 <code>Void</code> 到它自身的箭头。</p>
+<p><img src="https://czisky.github.io/post/2022-1-5-daofp-notes-01/02.png" alt="" /></p>
+<p><code>Void</code> 产出了 <code>Void</code> 和所有事物。</p>
+<p>终对象结合了一切，作为一种类型它被称为 <code>Unit</code>。</p>
+<p>在逻辑论中，终对象象征着终极真理，以 <code>T</code> 或 <code>&gt;</code> 为符号。任何对象都有一个指向它的符号，这意味着无论你的假设是什么，<code>&gt;</code> 都是真的。另一方面，始对象代表逻辑上的虚假、矛盾或反事实。用一个倒置的
+T 来象征，即为 <code>⊥</code>。事实上，从它到任何对象都有一个箭头，意味着你可以从错误的前提下尝试证明任何事情。</p>
+<p>在英语中，有专门的<a href="https://en.wikipedia.org/wiki/Counterfactual_conditional">语义</a>用于表述反事实的含义。例 <em>If wishes were horses, beggars would ride</em>
+这里的意思是当我们把愿望和马划上等号时，乞丐会骑上。但这个大前提是假的。</p>
+<p>编程语言能够使我们跟计算机交流。有些语言更容易让人或计算机理解，而有些语言更接近于理论层面。在 Haskell 中，始对象对应名为 <code>Void</code> 的类型，而终对象对应名为 <code>Unit</code>
+的类型。实际用来表示它的名称为 <code>()</code> 。</p>
+<p>还是在 Haskell 中，有无数的类型。而每一个类型都有一个从 <code>Void</code> 类型到它们的出射函数，这个函数被称为 <code>absurd</code>。</p>
+<p><img src="https://czisky.github.io/post/2022-1-5-daofp-notes-01/03.png" alt="" /></p>
+<h2 id="1-3-elements">1.3 Elements</h2>
+<p>一个对象内部可能没有东西，但它可能有结构，结构是由指向该对象的入射箭头定义的。</p>
+<p>在编程中，我们希望我们的始对象没有结构，所以我们假设它没有入射箭头（除了到它自身的除外, <code>Void -&gt; Void</code>）。因此 <code>Void</code>
+没有结构，而终对象只有从任何对象到它的入射箭头。从任何方向都只有一种探测它的方法，这个角度看终对象就像一个不可分割的点。它的唯一属性就是它存在，其他指向它的入射箭头证明了这一点。</p>
+<p>我们还可以用终对象去探测其他更为复杂的对象，如果有一个以上的箭头从终对象到某个对象 <code>a</code>。这意味着 <code>a</code> 有一些结构，有不止一种看待它的方式。终对象的行为就像是一个点，我们可以把来自它的每一个箭头看作是挑选目标的一个不同的点或元素。</p>
+<p>在范畴论中，如果 <code>x</code> 是一个箭头的话，我们把它看作是 <code>a</code> 的一个全局元素 (Global Element)。（通常我们会省略 “全局”）</p>
+<p><img src="https://czisky.github.io/post/2022-1-5-daofp-notes-01/04.png" alt="" /></p>
+<blockquote>
+<p>这里的 <code>1</code> 指终对象。</p>
+</blockquote>
+<p>在类型论中，<code>x : A</code> 意味着 <code>x</code> 是 <code>A</code> 类型的，在 Haskell 中，使用双冒号的符号来进行代替。</p>
+<pre data-lang="haskell" class="language-haskell "><code class="language-haskell" data-lang="haskell">x :: A
+</code></pre>
+<p>更直观的写法，虽然在类型系统上它们有所不同，但在范畴论的语义上它们是一样的。</p>
+<pre data-lang="haskell" class="language-haskell "><code class="language-haskell" data-lang="haskell">x :: () -&gt; A
+</code></pre>
+<p>在范畴论的角度上讲，我们把它解释成一个 <code>x : 1 -&gt; A</code> 的箭头，<code>A</code> 的一个元素。</p>
+<p>由于我们没有规定其他对象到 <code>Void</code> (始对象) 的箭头，所以也没有从终对象到它的箭头。因此 <code>Void</code>
+没有任何元素，这也就是为什么我们认为它是没有结构。而终对象只有一个元素，因为它有一个唯一的来自它自己的箭头 (<code>1 -&gt; 1</code>)。这就是为什么我们有时称它为单例 (Singleton)。</p>
+<blockquote>
+<p>范畴论中并不禁止始对象拥有来自其他对象的入射箭头，但是这里我们所研究的<a href="https://en.wikipedia.org/wiki/Cartesian_closed_category">笛卡儿闭范畴</a> (Cartesian Closed Category, CCC) 中，这是不允许的。</p>
+</blockquote>
+<h2 id="1-4-the-object-of-arrows">1.4 The Object of Arrows</h2>
+<p>两个对象之间的箭头可以构成一个集合。在 Haskell 中从类型 <code>a</code> 到类型 <code>b</code> 的函数可以这么写：</p>
+<pre data-lang="haskell" class="language-haskell "><code class="language-haskell" data-lang="haskell">f :: a -&gt; b
+</code></pre>
+<p>可以解释为 <code>f</code> 是 “从 <code>a</code> 到 <code>b</code> 的函数” 类型，在这里我们给这种函数 (<code>a -&gt; b</code>) 看作是一个类型。</p>
+<p>如果我们希望这种函数类型与其他类型被一样看待的话，我们就需要一个对象来表示一组从 <code>a</code> 到 <code>b</code> 的箭头。为了完全定义这一点，我们必须描述它跟其他对象的关系。特别是在 <code>a</code> 和 <code>b</code> 之间。
+为了做到这一点，我们需要区别它们，一方面我们有用来连接两个对象 <code>a</code> 和 <code>b</code> 的箭头，这些箭头形成一组。另一方面我们有一个从 <code>a</code> 到 <code>b</code> 的箭头对象，作为元素它是一个从终对象到 <code>a -&gt; b</code>
+对象的箭头。
+编程中使用的符号往往会模糊这种区别，这也就是为什么在范畴论中我们把箭头指向的对象写成<strong>指数</strong>并将其写为 bᵃ。（源对象在指数中）</p>
+<p><img src="https://czisky.github.io/post/2022-1-5-daofp-notes-01/05.png" alt="" /></p>
+<p>在逻辑论里面，一个 <code>a -&gt; b</code> 的箭头说明了这样一个事实：“如果 <code>a</code> 那么 <code>b</code>”。一个指数对象 bᵃ 是相应的命题，可真可假，我们不知道。它的证明是 bᵃ
+里的一个元素，如果这么一个元素存在，我就知道 <code>b</code> 是由 <code>a</code> 引出的。</p>
+<p>再思考一下 <em>If wishes were horses, beggars would ride</em> 这一陈述，这次是作为一个可以被证明真假的对象。</p>
+<p>写一些类似的东西：一个有马的人就会骑马，乞丐有愿望，既然愿望是马，乞丐就有马。因此乞丐会骑马。但是即使你有这段陈述的证明也没有用，因为你永远无法证明它的前提。愿望 = 马。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/"></a>&emsp;&copy; 闲蛋 (kirraObj)<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a
+    href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>

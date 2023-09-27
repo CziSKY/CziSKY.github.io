@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  
+<title>在 Kotlin 用 36 行实现 when 表达式 | </title>
+
+
+  <link rel="shortcut icon" type="image/png" href="&#x2F;images&#x2F;favicon.png">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="/dark.css">
+
+  <script type="text/javascript" src="/js/theme.js"></script>
+
+</head>
+
+<div class="header">
+  <div class="site_title">
+    <p><a href="/"><img src="https:&#x2F;&#x2F;czisky.github.io&#x2F;images&#x2F;logo.png" alt=""
+          width="70" height=auto></a></p>
+    <p><a href="/">&nbsp;</a></p>
+  </div>
+  <div class="menu">
+    <a href="/post">>archives</a>
+    &nbsp;<a href="/about">>about</a>
+  </div>
+</div>
+
+<body onload="getTheme()">
+  <section class="section">
+    <div class="container">
+      
+<p>
+  <div class="title_postpage">在 Kotlin 用 36 行实现 when 表达式</div>
+</p>
+<p>
+  <div class="date_postpage">2023-01-26</div>
+  <div class="taxonomies_postpage">
+  
+      
+      <a href="https://czisky.github.io/categories/coding/">/coding</a>
+      
+  
+  
+      
+      &emsp;<a href="https://czisky.github.io/tags/kotlin/">#kotlin</a>
+      
+  
+  </div>
+</p>
+
+<p>
+  <p>近期我在看 <a href="https://github.com/CziSKY/CS61A">CS61A</a>，对高阶函数 (Higher Order Function) 有了新的直觉和理解。所以我就突然想在 Kotlin 中实现函数式语言系的 Pattern Matching。我不知道这两个想法是怎么产生关联的，但它产生了。</p>
+<h2 id="lai-zi-shi-bai-zhe-de-jiang-jie-he-ta-de-yi-sheng">来自失败者的讲解和他的一生</h2>
+<p>Pattern Matching 是什么呢？它就类似于 Java 中的 <code>Switch</code> 或者是 Kotlin 中的 <code>when</code>，这是一个 Haskell 中的简单例子：</p>
+<pre data-lang="haskell" class="language-haskell "><code class="language-haskell" data-lang="haskell">sayMe :: (Integral a) =&gt; a -&gt; String  
+sayMe 1 = &quot;One!&quot;  
+sayMe 2 = &quot;Two!&quot;  
+sayMe 3 = &quot;Three!&quot;  
+sayMe 4 = &quot;Four!&quot;  
+sayMe 5 = &quot;Five!&quot;  
+sayMe x = &quot;Not between 1 and 5&quot;
+</code></pre>
+<p>即使你不懂 Haskell 大概也能猜出来这段代码的意思。可以理解成你传入一个参数 <code>Int</code> 然后它给你返回一个 <code>String</code>。但是 Pattern Matching 比这更强大，强大在哪了呢？下面是一个来自 Scala 官网的例子：</p>
+<pre data-lang="scala" class="language-scala "><code class="language-scala" data-lang="scala">sealed trait Notification
+
+case class Email(sender: String, title: String, body: String) extends Notification
+
+case class SMS(caller: String, message: String) extends Notification
+
+case class VoiceRecording(contactName: String, link: String) extends Notification
+
+def showNotification(notification: Notification): String = {
+  notification match {
+    case Email(sender, title, _) =&gt;
+      s&quot;You got an email from $sender with title: $title&quot;
+    case SMS(number, message) =&gt;
+      s&quot;You got an SMS from $number! Message: $message&quot;
+    case VoiceRecording(name, link) =&gt;
+      s&quot;You received a Voice Recording from $name! Click the link to hear it: $link&quot;
+  }
+}
+
+println(showNotification(SMS(&quot;12345&quot;, &quot;Are you there?&quot;)))  &#x2F;&#x2F; prints You got an SMS from 12345! Message: Are you there?
+
+println(showNotification(VoiceRecording(&quot;Tom&quot;, &quot;voicerecording.org&#x2F;id&#x2F;123&quot;)))  &#x2F;&#x2F; prints You received a Voice Recording from Tom! Click the link to hear it: voicerecording.org&#x2F;id&#x2F;123
+</code></pre>
+<p>它支持内部参数的判断和绑定（绑定参数提供给下文），即你还可以把 <code>case Email(sender, title, _) =&gt;</code> 改成 <code>case Email(&quot;闲蛋&quot;, title, _) =&gt;</code>。这样即同时表示如果 <code>notification</code> 是一个 <code>Email</code> 类型加它的第一个参数还为 &quot;闲蛋&quot; 就执行下一步的操作。</p>
+<p>但实现中途发现我太菜然后写挫了，因为我没能实现参数绑定。只实现了一个加强版的 when。</p>
+<h2 id="shi-bai-zhe-de-shi-xian">失败者的实现</h2>
+<p>我们可以把匹配体抽象成一个列表，这是最简单的实现方法。每一个 case 即是在列表内添加一个元素。当需要匹配的时候在列表里面寻找第一个元素（表示匹配顺序）然后返回。我们新建一个 <code>MatcherBranch</code> 类：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">class MatcherBranch&lt;R, O&gt;(val value: O, val result: O.() -&gt; R) {
+
+    fun get() = result.invoke(value)
+}
+</code></pre>
+<p>范型 <code>R</code> 表示的是最终我们返回的结果类型，<code>O</code> 表示传入的匹配类型。这两个类型都由更上层提供给我们，我们再新建一个 <code>Matcher</code> 类：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">class Matcher&lt;R, O&gt;(val value: O) {
+
+    val branches = mutableListOf&lt;MatcherBranch&lt;R, *&gt;&gt;()
+}
+</code></pre>
+<p><code>branches</code> 的第二个类型参数为 <code>*</code> 的原因是我们可能需要 case 到不同的类型上去。也就是说这个类型并不唯一。我们编写第一个匹配方法：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">fun case(block: (O) -&gt; Boolean, result: O.() -&gt; R) {
+    if (!block.invoke(value)) {
+        return
+    }
+    branches += MatcherBranch(value = value, result = result)
+}
+</code></pre>
+<p>第一个 case 是同类型的模式匹配，相当于对传进来的 <code>value</code> 变量用 if 进行判断。如果符合结果则加入分支。我们编写第二个匹配参数：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">@JvmName(&quot;caseType&quot;)
+inline fun &lt;reified T&gt; case(block: (T) -&gt; Boolean = { true }, noinline result: T.() -&gt; R) {
+    (value as? T)?.apply {
+        if (!block.invoke(this)) {
+            return
+        }
+        branches += MatcherBranch(value = this, result = result)
+    }
+}
+</code></pre>
+<p>我们引入了一个新的范型 <code>T</code>，这个 <code>T</code> 代表了我们需要转换到的新类型。如转换成功则进行条件判断，条件判断成功则加入分支。</p>
+<p>因为 JVM 底层的范型擦除机制，正常情况下我们并不能把这个 <code>T</code> 直接传过来然后跟参数转换，我们使用 Kotlin 的 <code>reified</code> 特性来解决这个问题。</p>
+<p>此外，我们还需要一个分支，这个分支代表所有结果都没有匹配成功的返回。在 Java 中它为 <code>Switch</code> 中的 <code>default</code>，在 Kotlin 中它为 <code>when</code> 中的 <code>else</code>。</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">fun default(result: R) {
+    branches += MatcherBranch(value = value, result = { result })
+}
+</code></pre>
+<p>此时还有一个问题，那就是我们并不能确定使用者会把 <code>default</code> 放在匹配体的什么位置（虽然并没有人会用），因为我们的逻辑是匹配第一个元素返回结果，如果你把这个 <code>default</code> 提到前面的话就非常糟糕了。它只会匹配到 <code>default</code>。就像这样：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">interface Notification
+
+data class Email(val sender: String, val title: String, val body: String) : Notification
+
+data class SMS(val caller: String, val message: String) : Notification
+
+data class VoiceRecording(val contactName: String, val link: String) : Notification
+
+matcher(VoiceRecording(&quot;Joe&quot;, &quot;voicerecording.org&#x2F;id&#x2F;123&quot;)) {
+    default(&quot;Match error.&quot;)
+    case&lt;Email&gt; { &quot;You got an email from $sender with title: $title&quot; }
+    case&lt;SMS&gt; { &quot;You got an SMS from $caller! Message: $message&quot; }
+    case&lt;VoiceRecording&gt; { &quot;You received a Voice Recording from $contactName! Click the link to hear it: $link&quot; }
+}.match()
+&#x2F;&#x2F; Result: &quot;Match Error&quot;
+</code></pre>
+<p>我们给 <code>MatcherBranch</code> 类加上一个变量来解决这个问题：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">class MatcherBranch&lt;R, O&gt;(val value: O, val result: O.() -&gt; R, val isDefault: Boolean = false) {
+
+    fun get() = result.invoke(value)
+}
+</code></pre>
+<p>然后我们修改一下 <code>default</code> 方法，再把 <code>match</code> 方法写下来：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">fun default(result: R) {
+    branches += MatcherBranch(value = value, result = { result }, isDefault = true)
+}
+
+fun match(): R {
+    return branches
+        .filter { !it.isDefault }
+        .firstNotNullOfOrNull { it.get() } ?: branches.find { it.isDefault }?.get() ?: error(&quot;Match error.&quot;)
+}
+</code></pre>
+<p>我们完成了，但直接这样使用非常蛋疼，我们在类外面编写两个顶层方法（在这里我有点作弊，因为 36 行并不包含下面的两个方法）：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">fun &lt;R, O&gt; matcher(value: O, func: Matcher&lt;R, O&gt;.() -&gt; Unit): Matcher&lt;R, O&gt; {
+    return Matcher&lt;R, O&gt;(value).apply {
+        func.invoke(this)
+    }
+}
+
+@JvmName(&quot;extensionMatcher&quot;)
+fun &lt;R, O&gt; O.matcher(func: Matcher&lt;R, O&gt;.() -&gt; Unit): Matcher&lt;R, O&gt; {
+    return Matcher&lt;R, O&gt;(this).also { matcher -&gt;
+        func.invoke(matcher)
+    }
+}
+</code></pre>
+<p>接下来我们就能愉快的使用它们了：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">interface Notification
+
+data class Email(val sender: String, val title: String, val body: String) : Notification
+
+data class SMS(val caller: String, val message: String) : Notification
+
+data class VoiceRecording(val contactName: String, val link: String) : Notification
+
+VoiceRecording(&quot;Joe&quot;, &quot;voicerecording.org&#x2F;id&#x2F;123&quot;).matcher {
+    case&lt;Email&gt; { &quot;You got an email from $sender with title: $title&quot; }
+    case&lt;SMS&gt; { &quot;You got an SMS from $caller! Message: $message&quot; }
+    case&lt;VoiceRecording&gt; { &quot;You received a Voice Recording from $contactName! Click the link to hear it: $link&quot; }
+    default(&quot;Match error.&quot;)
+}.match()
+&#x2F;&#x2F; Result: &quot;You received a Voice Recording from Joe! Click the link to hear it: voicerecording.org&#x2F;id&#x2F;123&quot;
+
+matcher(VoiceRecording(&quot;Joe&quot;, &quot;voicerecording.org&#x2F;id&#x2F;123&quot;)) {
+    case&lt;Email&gt; { &quot;You got an email from $sender with title: $title&quot; }
+    case&lt;SMS&gt; { &quot;You got an SMS from $caller! Message: $message&quot; }
+    case&lt;VoiceRecording&gt; { &quot;You received a Voice Recording from $contactName! Click the link to hear it: $link&quot; }
+    default(&quot;Match error.&quot;)
+}.match()
+&#x2F;&#x2F; Result: &quot;You received a Voice Recording from Joe! Click the link to hear it: voicerecording.org&#x2F;id&#x2F;123&quot;
+</code></pre>
+<p>你可以通过这个来实现我上面说的那个 Scala 的例子，只不过比较别扭。比如说：</p>
+<pre data-lang="kotlin" class="language-kotlin "><code class="language-kotlin" data-lang="kotlin">interface Notification
+
+data class Email(val sender: String, val title: String, val body: String) : Notification
+
+data class SMS(val caller: String, val message: String) : Notification
+
+data class VoiceRecording(val contactName: String, val link: String) : Notification
+
+matcher(VoiceRecording(&quot;Joe&quot;, &quot;voicerecording.org&#x2F;id&#x2F;123&quot;)) {
+    case&lt;Email&gt; { &quot;You got an email from $sender with title: $title&quot; }
+    case&lt;SMS&gt; { &quot;You got an SMS from $caller! Message: $message&quot; }
+    case&lt;VoiceRecording&gt;({ it.contactName == &quot;闲蛋&quot; }) { &quot;You received a Voice Recording from $contactName! Click the link to hear it: $link&quot; }
+    default(&quot;Match error.&quot;)
+}.match()
+&#x2F;&#x2F; Result: &quot;Match error.&quot;
+</code></pre>
+<p>我把这个丢人的玩具开源在了 <a href="https://github.com/CziSKY/KMatcher">Github</a> 上。</p>
+
+</p>
+
+
+
+
+    </div>
+  </section>
+</body>
+
+<div class="footer">
+  <a href="/"></a>&emsp;&copy; 闲蛋 (kirraObj)<br>
+  powered by <a href="https://www.getzola.org/">Zola</a>, theme <a
+    href="https://github.com/kyoheiu/emily_zola_theme">emily</a>.
+</div>
+
+</html>
